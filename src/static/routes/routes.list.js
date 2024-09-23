@@ -36,8 +36,26 @@ router.get('/', (req,res) => {
     res.send('Aplicación de lista de tareas funcionando');
 });
 
+// obtener todas las tareas
+router.get('/gettasks', async (req,res) => {
+    try {
+        // obtengo las tareas con el metodo find()
+        const tasks = await Task.find();
+
+        res.json({
+            message:'exito',
+            tasks: tasks
+        });
+    } catch (error) {
+        console.log('error al obtener las tareas',error);
+
+        res.json({message: 'error'});
+    }
+});
+
 // agregar tarea a BBDD
 router.post('/addtask', async (req,res) => {
+    // obtengo los campos de la tarea que vienen en el req
     const task = new Task({
         name: req.body.name,
         description: req.body.description,
@@ -45,13 +63,14 @@ router.post('/addtask', async (req,res) => {
     });
 
     try {
+        // agregó la tarea usando el método save()
         await task.save();
 
         res.json({message: 'exito'});
     }
     catch (error) {
         console.log('error al agregar tarea',error);
-        
+
         res.json({message: 'error'});
     }
 });
