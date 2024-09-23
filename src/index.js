@@ -43,6 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
+
 //iniciar servidor
 app.listen(app.get('port'), () => {
     console.log(`Servidor iniciado en el puerto ${app.get('port')}`);
