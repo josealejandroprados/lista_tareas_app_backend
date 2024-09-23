@@ -1,13 +1,16 @@
-// importar express
-const express = require('express');
-
 //importar dotenv
 const dotenv = require('dotenv');
 //seteamos las variables de entorno
 dotenv.config({path:'./src/env/.env'});
 
+// importar express
+const express = require('express');
+
 // importar cors
 const cors = require('cors');
+
+// importar router
+const { router } = require('./static/routes/routes.list.js');
 
 //crear app
 const app = express();
@@ -42,7 +45,8 @@ app.use(express.static('./src/static'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-
+// usar router
+app.use('/', cors(), router);
 
 //iniciar servidor
 app.listen(app.get('port'), () => {

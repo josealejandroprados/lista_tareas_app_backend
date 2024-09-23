@@ -2,10 +2,7 @@
 const mongoose = require('mongoose');
 
 // Conexión a MongoDB Atlas
-const db = mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+const db = mongoose.connect(process.env.MONGODB_URI)
 .then( () => {
     console.log('Conexión exitosa a la BBDD de MongoDB Atlas');
 })
@@ -14,5 +11,6 @@ const db = mongoose.connect(process.env.MONGODB_URI, {
 });
 
 module.exports = {
-    db
+    db,
+    mongoose
 }
