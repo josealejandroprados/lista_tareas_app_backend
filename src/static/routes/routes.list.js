@@ -16,8 +16,8 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    completed: {
-        type: Boolean,
+    state: {
+        type: String,
         required:true
     }
 },
@@ -59,7 +59,7 @@ router.post('/addtask', async (req,res) => {
     const task = new Task({
         name: req.body.name,
         description: req.body.description,
-        completed: req.body.completed
+        state: req.body.state
     });
 
     try {
