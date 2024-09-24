@@ -75,6 +75,23 @@ router.post('/addtask', async (req,res) => {
     }
 });
 
+// eliminar tarea con su id
+router.delete('/deletetask/:id', async (req,res) => {
+    // obtengo el id como parametro de ruta
+    const id = req.params.id;
+
+    try {
+        // elimino tarea con su id usando el método findByIdAndDelete
+        await Task.findByIdAndDelete(id);
+
+        res.json({message: 'exito'});
+    } catch (error) {
+        console.log('error al eliminar tarea',error);
+
+        res.json({message: 'error'});
+    }
+});
+
 
 module.exports = {
     router
