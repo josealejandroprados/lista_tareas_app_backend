@@ -22,7 +22,8 @@ const taskSchema = new mongoose.Schema({
     }
 },
 {
-    timestamps: true
+    timestamps: true,
+    versionKey: false,
 });
 
 // creo un modelo
@@ -53,6 +54,23 @@ router.get('/gettasks', async (req,res) => {
     }
 });
 
+// obtener una tarea con su id
+router.get('/gettask/:id', async(req,res) => {
+    const id = req.params.id;
+
+    try {
+        const task = await Task.findById(id);
+
+        res.json({
+            message: 'exito',
+            task: task
+        });
+    } catch (error) {
+        console.log('error al obtener la tarea');
+        res.json({message: 'error'});
+    }
+});
+
 // agregar tarea a BBDD
 router.post('/addtask', async (req,res) => {
     // obtengo los campos de la tarea que vienen en el req
@@ -70,6 +88,28 @@ router.post('/addtask', async (req,res) => {
     }
     catch (error) {
         console.log('error al agregar tarea',error);
+
+        res.json({message: 'error'});
+    }
+});
+
+// actualizar una tarea
+router.put('/updatetask/:id', async(req,res) => {
+    // obtengo el id como parametro de ruta
+    const id = req.params.id;
+    // obtengo los campos de la tarea que vienen en el req
+    const task = {
+        name: req.body.name,
+        description: req.body.description,
+        state: req.body.state
+    };
+
+    try {
+        await Task.findByIdAndUpdate(id,task);
+
+        res.json({message: 'exito'});
+    } catch (error) {
+        console.log('error al actualizar la tarea',error);
 
         res.json({message: 'error'});
     }
