@@ -101,6 +101,7 @@ router.post('/login', async(req,res) => {
                     token: token,
                     rol: userExist.rol,
                     usuario: user.email,
+                    id: userExist._id
                 });
             }
             else{
@@ -115,6 +116,22 @@ router.post('/login', async(req,res) => {
             message:'Ha ocurrido un error',
             error: error
         })
+    }
+});
+
+// end point eliminar cuenta de usuario
+router.delete('/deleteaccount/:id', async(req,res) => {
+    // obtengo el id del usuario como un parámetro de ruta
+    const id = req.params.id;
+
+    try {
+        await User.findByIdAndDelete(id);
+
+        res.json({message:'exito'});
+    } catch (error) {
+        console.log('error al eliminar el usuario',error);
+
+        res.json({message:'error'});
     }
 });
 

@@ -134,5 +134,19 @@ router.delete('/deletetask/:id', async (req,res) => {
     }
 });
 
+// eliminar todas las tareas de una sola vez, util cuando se elimina una cuenta de usuario
+router.delete('/deletealltasks', async(req,res) => {
+    try {
+        // llamar al metodo deleteMany
+        await Task.deleteMany({});
+
+        res.json({message:'exito'});
+    } catch (error) {
+        console.log('error al eliminar todas las tareas',error);
+
+        res.json({message:'error'});
+    }
+});
+
 
 module.exports = router;
