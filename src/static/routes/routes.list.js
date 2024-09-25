@@ -7,24 +7,26 @@ const router = express.Router();
 const { db, mongoose } = require('../db/db.js');
 
 // definir esquema de tareas
-const taskSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+const taskSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        state: {
+            type: String,
+            required:true
+        }
     },
-    description: {
-        type: String,
-        required: true
-    },
-    state: {
-        type: String,
-        required:true
+    {
+        timestamps: true,
+        versionKey: false,
     }
-},
-{
-    timestamps: true,
-    versionKey: false,
-});
+);
 
 // creo un modelo
 const Task = mongoose.model('lista',taskSchema);
@@ -133,6 +135,4 @@ router.delete('/deletetask/:id', async (req,res) => {
 });
 
 
-module.exports = {
-    router
-}
+module.exports = router;

@@ -10,7 +10,8 @@ const express = require('express');
 const cors = require('cors');
 
 // importar router
-const { router } = require('./static/routes/routes.list.js');
+const routerList = require('./static/routes/routes.list.js');
+const routerAuth = require('./static/routes/routes.auth.js');
 
 //crear app
 const app = express();
@@ -46,7 +47,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // usar router
-app.use('/', cors(), router);
+app.use('/', cors(), routerList);
+app.use('/', cors(), routerAuth);
 
 //iniciar servidor
 app.listen(app.get('port'), () => {
