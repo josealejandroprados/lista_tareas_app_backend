@@ -19,7 +19,11 @@ const taskSchema = new mongoose.Schema(
         },
         state: {
             type: String,
-            required:true
+            required: true
+        },
+        user_id: {
+            type: String,
+            required: true
         }
     },
     {
@@ -40,10 +44,13 @@ router.get('/', (req,res) => {
 });
 
 // obtener todas las tareas
-router.get('/gettasks', async (req,res) => {
+router.get('/gettasks/:user_id', async (req,res) => {
+    // obtengo el id del usuario como parametro de ruta
+    const user_id = req.params.user_id;
+
     try {
         // obtengo las tareas con el metodo find()
-        const tasks = await Task.find();
+        const tasks = await Task.find({user_id: user_id});
 
         res.json({
             message:'exito',
@@ -77,6 +84,7 @@ router.get('/gettask/:id', async(req,res) => {
 router.post('/addtask', async (req,res) => {
     // obtengo los campos de la tarea que vienen en el req
     const task = new Task({
+        user_id: req.body.user_id,
         name: req.body.name,
         description: req.body.description,
         state: req.body.state
