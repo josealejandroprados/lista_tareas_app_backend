@@ -107,4 +107,27 @@ router.delete('/deleteaccount/:id', isAuth, async(req,res) => {
     }
 });
 
+// endpoint para consultar disponibilidad de email en la BBDD
+router.get('/emailAvailable/:email', async(req,res) => {
+    // obtener email como parametro de ruta
+    const email = req.params.email;
+
+    try {
+        // consulto a la BBDD si existe el email
+        const resultado = await User.find({email: email});
+
+        if(resultado[0]){
+            // si obtengo un resultado quiere decir que el email ya existe en la BBDD
+            // entonces no está disponible para registro
+            res.json({available: false});
+        }
+        else{
+            // no obtuve resultado => email si está disponible para registro
+            res.json({available: true});
+        }
+    } catch (error) {
+        res.json({available: false});
+    }
+});
+
 module.exports = router;
