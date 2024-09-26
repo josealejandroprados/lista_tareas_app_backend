@@ -7,40 +7,11 @@ const jwt = require('jsonwebtoken');
 //importamos bcryptjs
 const bcrypt = require('bcryptjs');
 
-// importar mongoose
-const { mongoose } = require('../db/db.js');
+// importar modelo User
+const User = require('../models/user.model.js');
 
-// definir esquema de usuario
-const userSchema = new mongoose.Schema(
-    {
-        nombre: {
-            type: String,
-            required: true
-        },
-        apellido: {
-            type: String,
-            required: true
-        },
-        email: {
-            type: String,
-            required:true
-        },
-        password: {
-            type: String,
-            required:true
-        },
-        rol: {
-            type: String,
-            required:true
-        },
-    },
-    {
-        versionKey: false,
-    }
-);
-
-// creo un modelo
-const User = mongoose.model('users',userSchema);
+// importar middleware isAuth
+const { isAuth } = require('./auth.js');
 
 // endpoint registrar un usuario
 router.post('/register', async (req,res) => {
@@ -71,13 +42,14 @@ router.post('/register', async (req,res) => {
 
 // endpoint inicio sesion/login de usuario
 router.post('/login', async(req,res) => {
-
+    // obtengo el usuario (email) y password proporcionado por el usuario en el frontend
     const user = {
         email: req.body.email,
         password: req.body.password
     }
 
     try {
+        // consulto a la BBDD si existe un usuario con el email proporcionado por el usuario
         const userExist = await User.findOne({email: user.email});
 
         if(!userExist){
@@ -120,7 +92,7 @@ router.post('/login', async(req,res) => {
 });
 
 // end point eliminar cuenta de usuario
-router.delete('/deleteaccount/:id', async(req,res) => {
+router.delete('/deleteaccount/:id', isAuth, async(req,res) => {
     // obtengo el id del usuario como un parámetro de ruta
     const id = req.params.id;
 
@@ -135,4 +107,4 @@ router.delete('/deleteaccount/:id', async(req,res) => {
     }
 });
 
-module.exports = router
+module.exports = router;

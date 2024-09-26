@@ -6,6 +6,9 @@ const router = express.Router();
 // importar conexión a BBDD de mongoDB
 const { db, mongoose } = require('../db/db.js');
 
+// importar middleware isAuth
+const { isAuth } = require('./auth.js');
+
 // definir esquema de tareas
 const taskSchema = new mongoose.Schema(
     {
@@ -44,7 +47,7 @@ router.get('/', (req,res) => {
 });
 
 // obtener todas las tareas
-router.get('/gettasks/:user_id', async (req,res) => {
+router.get('/gettasks/:user_id', isAuth, async (req,res) => {
     // obtengo el id del usuario como parametro de ruta
     const user_id = req.params.user_id;
 
@@ -64,7 +67,7 @@ router.get('/gettasks/:user_id', async (req,res) => {
 });
 
 // obtener una tarea con su id
-router.get('/gettask/:id', async(req,res) => {
+router.get('/gettask/:id', isAuth, async(req,res) => {
     const id = req.params.id;
 
     try {
@@ -81,7 +84,7 @@ router.get('/gettask/:id', async(req,res) => {
 });
 
 // agregar tarea a BBDD
-router.post('/addtask', async (req,res) => {
+router.post('/addtask', isAuth, async (req,res) => {
     // obtengo los campos de la tarea que vienen en el req
     const task = new Task({
         user_id: req.body.user_id,
@@ -104,7 +107,7 @@ router.post('/addtask', async (req,res) => {
 });
 
 // actualizar una tarea
-router.put('/updatetask/:id', async(req,res) => {
+router.put('/updatetask/:id', isAuth, async(req,res) => {
     // obtengo el id como parametro de ruta
     const id = req.params.id;
     // obtengo los campos de la tarea que vienen en el req
@@ -126,7 +129,7 @@ router.put('/updatetask/:id', async(req,res) => {
 });
 
 // eliminar tarea con su id
-router.delete('/deletetask/:id', async (req,res) => {
+router.delete('/deletetask/:id', isAuth, async (req,res) => {
     // obtengo el id como parametro de ruta
     const id = req.params.id;
 
@@ -143,10 +146,13 @@ router.delete('/deletetask/:id', async (req,res) => {
 });
 
 // eliminar todas las tareas de una sola vez, util cuando se elimina una cuenta de usuario
-router.delete('/deletealltasks', async(req,res) => {
+router.delete('/deletealltasks/:user_id', isAuth, async(req,res) => {
+    // obtengo el id del usuario como parametro de ruta
+    const user_id = req.params.user_id;
+
     try {
         // llamar al metodo deleteMany
-        await Task.deleteMany({});
+        await Task.deleteMany({user_id: user_id});
 
         res.json({message:'exito'});
     } catch (error) {
