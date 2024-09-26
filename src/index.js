@@ -18,7 +18,8 @@ const app = express();
 
 //configurar cors, listDomain='lista de sitios permitidos'
 const listDomain = [
-    "http://localhost:4200"
+    // "http://localhost:4200"
+    'https://listadetareasjp.netlify.app'
 ];
 //opciones de CORS
 const corsOpcions = {
