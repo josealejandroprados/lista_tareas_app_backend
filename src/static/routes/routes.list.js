@@ -4,40 +4,13 @@ const express = require('express');
 const router = express.Router();
 
 // importar conexión a BBDD de mongoDB
-const { db, mongoose } = require('../db/db.js');
+const { db } = require('../db/db.js');
 
 // importar middleware isAuth
 const { isAuth } = require('./auth.js');
 
-// definir esquema de tareas
-const taskSchema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: true
-        },
-        description: {
-            type: String,
-            required: true
-        },
-        state: {
-            type: String,
-            required: true
-        },
-        user_id: {
-            type: String,
-            required: true
-        }
-    },
-    {
-        timestamps: true,
-        versionKey: false,
-    }
-);
-
-// creo un modelo
-const Task = mongoose.model('lista',taskSchema);
-
+// importar modelo de lista
+const Task = require('../models/task.model.js');
 
 // ----------------------    RUTAS   -------------------------------------------------
 // ruta inicial
