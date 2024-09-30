@@ -6,6 +6,17 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 //importamos bcryptjs
 const bcrypt = require('bcryptjs');
+// importar nodemailer
+const nodemailer = require('nodemailer');
+
+// Configurar el transporte de nodemailer para usar Gmail
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_BACKEND,
+      pass: process.env.PASSWORD_APP
+    },
+});
 
 // importar modelo User
 const User = require('../models/user.model.js');
@@ -128,6 +139,45 @@ router.get('/emailAvailable/:email', async(req,res) => {
     } catch (error) {
         res.json({available: false});
     }
+});
+
+// end point para email con los datos del formulario de contacto que viene del frontend
+router.post('/sendemail', (req,res) => {
+    const obj = {
+        nombre: req.body.nombre,
+        email_user: req.body.email_user,
+        mensaje: req.body.mensaje,
+        asunto: req.body.asunto,
+        telefono: req.body.telefono
+    }
+    var texto;
+    if(obj.telefono != ''){
+        texto = `La persona de nombre ${obj.nombre} con email ${obj.email_user} y telefono ${obj.telefono}, te envío el mensaje:<br><br> ${obj.mensaje}`;
+    }
+    else{
+        texto = `La persona de nombre ${obj.nombre} con email ${obj.email_user}, te envío el mensaje:<br><br> ${obj.mensaje}`;
+    }
+
+    const mailOptions = {
+        from: process.env.EMAIL_BACKEND, // Remitente
+        to: process.env.EMAIL_DEST,
+        subject: obj.asunto,
+        text:texto,
+        html: `
+            <p>${texto}</p>
+        `
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if(error){
+            console.log(error);
+            res.json({message:'error'});
+        }
+        else{
+            console.log('Correo enviado: ' + info.response);
+            res.json({message:'exito'});
+        }
+    })
 });
 
 module.exports = router;
