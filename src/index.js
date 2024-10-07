@@ -17,27 +17,27 @@ const routerAuth = require('./static/routes/routes.auth.js');
 const app = express();
 
 //configurar cors, listDomain='lista de sitios permitidos'
-const listDomain = [
+// const listDomain = [
     // "http://localhost:4200"
-    'https://listadetareasjp.netlify.app',
-    'https://dibujosappjp.web.app'
-];
+    // 'https://listadetareasjp.netlify.app',
+    // 'https://dibujosappjp.web.app'
+// ];
 //opciones de CORS
-const corsOpcions = {
-    origin: function(origin,callback){
-        if(listDomain.indexOf(origin) !== -1 || !origin){
-            callback(null,true);
-        }
-        else{
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    optionsSuccessStatus:200,
-    credentials:true
-};
+// const corsOpcions = {
+//     origin: function(origin,callback){
+//         if(listDomain.indexOf(origin) !== -1 || !origin){
+//             callback(null,true);
+//         }
+//         else{
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     optionsSuccessStatus:200,
+//     credentials:true
+// };
 
 //usar CORS
-app.use(cors(corsOpcions));
+app.use(cors());
 
 //setting express
 app.set('port', process.env.PORT || 3000);
